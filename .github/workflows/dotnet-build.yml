@@ -1,10 +1,11 @@
 
-name: Custom Action Workflow
+name: Luciane Workflow
 
 on:
   push:
-    branches:
-       - main
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
   schedule:
     - cron: '0 * * * *'
 
@@ -16,7 +17,13 @@ jobs:
     - name: Checkout code
     - uses: actions/checkout@v2
 
-    - name: Run execute my script
-      run: |  
-        echo "This is a custom script."
-        echo "It will run on every push to the main branch and every hour."
+    - name: Setup .Net
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '*'
+
+    - name: Restore dependencies
+      run: dotnet restore
+  
+    - name: Build
+      run: dotnet build --no-restore
